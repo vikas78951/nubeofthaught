@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { QuizStageRunner } from "@/components/QuizStageRunner";
 import { SynthesisLoader } from "@/components/SynthesisLoader";
@@ -17,13 +17,39 @@ export default function Home() {
   const [userSelections, setUserSelections] = useState<Record<number, string>>({});
   const [assessment, setAssessment] = useState<PersonalityAssessment | null>(null);
 
+  // Guarantee window scrolls to top on any flow state or stage transition
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        window.scrollTo(0, 0);
+      }
+    } catch {
+      // safe fallback
+    }
+  }, [flowState, currentStageIndex]);
+
   const handleStartQuiz = () => {
+    try {
+      if (typeof window !== "undefined") {
+        window.scrollTo(0, 0);
+      }
+    } catch {
+      // safe fallback
+    }
     setCurrentStageIndex(0);
     setUserSelections({});
     setFlowState("quiz");
   };
 
   const handleNextStage = async (selectedOptionId: string) => {
+    try {
+      if (typeof window !== "undefined") {
+        window.scrollTo(0, 0);
+      }
+    } catch {
+      // safe fallback
+    }
+
     const stage = ILLUSIONS_DATA[currentStageIndex];
     const updatedSelections = { ...userSelections, [stage.id]: selectedOptionId };
     setUserSelections(updatedSelections);
@@ -94,7 +120,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main style={{ minHeight: "100vh" }}>
       {flowState === "hero" && <HeroSection onStartQuiz={handleStartQuiz} />}
 
       {flowState === "quiz" && (
@@ -113,7 +139,14 @@ export default function Home() {
           assessment={assessment}
           allStages={ILLUSIONS_DATA}
           userSelections={userSelections}
-          onStartCompanion={() => setFlowState("companion")}
+          onStartCompanion={() => {
+            try {
+              if (typeof window !== "undefined") {
+                window.scrollTo(0, 0);
+              }
+            } catch {}
+            setFlowState("companion");
+          }}
           onRetakeQuiz={handleStartQuiz}
         />
       )}
@@ -121,7 +154,14 @@ export default function Home() {
       {flowState === "companion" && assessment && (
         <CompanionChat
           assessment={assessment}
-          onBackToDashboard={() => setFlowState("dashboard")}
+          onBackToDashboard={() => {
+            try {
+              if (typeof window !== "undefined") {
+                window.scrollTo(0, 0);
+              }
+            } catch {}
+            setFlowState("dashboard");
+          }}
         />
       )}
     </main>

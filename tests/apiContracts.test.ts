@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { POST as synthesizeHandler } from "../app/api/synthesize/route";
 import { POST as companionHandler } from "../app/api/companion/chat/route";
 

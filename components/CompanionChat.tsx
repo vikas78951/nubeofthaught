@@ -2,7 +2,17 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { PersonalityAssessment } from "@/lib/gemini";
-import { Send, Bot, User, ArrowLeft, Sparkles, Compass } from "lucide-react";
+import {
+  Send,
+  User,
+  ArrowLeft,
+  Compass,
+  RotateCcw,
+  ShieldCheck,
+  AlertTriangle,
+  Brain,
+  Lightbulb,
+} from "lucide-react";
 
 interface Message {
   role: "user" | "model";
@@ -21,11 +31,11 @@ export function CompanionChat({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: `Welcome to your personal introspective space. Based on your optical choices, you embody **${assessment.archetypeTitle}** — *"${assessment.tagline}"*.
+      content: `Welcome to your personal cognitive workspace. Based on your optical choices, you embody **${assessment.archetypeTitle}** — *"${assessment.tagline}"*.
 
-I am here as your cognitive companion. I have internalized your strengths, such as your knack for macroscopic synthesis and emotional attunement, as well as your blind spots.
+I am your dedicated AI Cognitive Mentor. I have internalized your strengths, such as your macroscopic pattern recognition and emotional attunement, as well as your key growth areas.
 
-What challenge, thought, or goal is on your mind today?`,
+How would you like to apply your perceptual strengths today? You can choose one of the starter topics below or ask any question about your leadership, career, or decision-making style.`,
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -33,10 +43,10 @@ What challenge, thought, or goal is on your mind today?`,
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const starterPrompts = [
-    "How does my archetype approach major life decisions?",
-    "What blind spots should I watch out for in my career?",
-    "How can I balance my gut intuition with detailed execution?",
-    "Tell me more about what my optical choices say about my leadership style.",
+    "How does my archetype approach high-stakes decisions?",
+    "What blind spots should I watch out for in team collaborations?",
+    "How can I balance my macroscopic vision with detailed execution?",
+    "How can I best communicate with opposing cognitive archetypes?",
   ];
 
   const scrollToBottom = () => {
@@ -78,7 +88,7 @@ What challenge, thought, or goal is on your mind today?`,
         {
           role: "model",
           content:
-            "I encountered a momentary cloud while processing. Please feel free to rephrase or share your thought again.",
+            "I encountered a momentary connection hiccup. As your cognitive mentor, I encourage you to reflect on your core strengths and rephrase your inquiry.",
         },
       ]);
     } finally {
@@ -86,315 +96,379 @@ What challenge, thought, or goal is on your mind today?`,
     }
   };
 
+  const handleResetChat = () => {
+    setMessages([
+      {
+        role: "model",
+        content: `Session refreshed. I am calibrated to **${assessment.archetypeTitle}**. What cognitive challenge or inquiry would you like to explore?`,
+      },
+    ]);
+  };
+
   return (
     <div
+      className="enterprise-bg"
       style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        padding: "24px 16px",
+        padding: "24px 20px",
       }}
     >
+      {/* Top Header Bar */}
       <div
-        className="glass-panel"
         style={{
-          maxWidth: "880px",
+          maxWidth: "1280px",
           width: "100%",
-          height: "calc(100vh - 48px)",
+          margin: "0 auto 20px auto",
           display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "12px",
         }}
       >
-        {/* Chat Header */}
-        <div
+        <button
+          onClick={onBackToDashboard}
           style={{
-            padding: "18px 24px",
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            background: "rgba(18, 21, 19, 0.9)",
+            gap: "8px",
+            padding: "8px 16px",
+            borderRadius: "8px",
+            background: "rgba(255, 255, 255, 0.04)",
+            border: "1px solid var(--border)",
+            color: "var(--text-secondary)",
+            fontSize: "13px",
+            fontWeight: 500,
+            cursor: "pointer",
+            transition: "all 0.2s ease",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)")}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <button
-              onClick={onBackToDashboard}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "var(--mute)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
-              title="Back to Dashboard"
-            >
-              <ArrowLeft size={20} />
-            </button>
+          <ArrowLeft size={15} />
+          <span>Return to Full Dossier</span>
+        </button>
 
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontWeight: 500, color: "var(--text)", fontSize: "16px" }}>
-                  Companion • {assessment.archetypeTitle}
-                </span>
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "50%",
-                    background: "var(--primary-foreground)",
-                  }}
-                />
-              </div>
-              <p style={{ fontSize: "12px", color: "var(--mute)" }}>
-                Conditioned on your 19 subconscious optical responses
-              </p>
-            </div>
-          </div>
-
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              padding: "4px 12px",
+              padding: "4px 10px",
               borderRadius: "9999px",
-              background: "rgba(103, 242, 154, 0.08)",
-              color: "var(--primary-foreground)",
+              background: "rgba(16, 185, 129, 0.1)",
+              border: "1px solid rgba(16, 185, 129, 0.2)",
               fontSize: "12px",
+              color: "var(--primary)",
             }}
           >
-            <Sparkles size={13} />
-            <span>MVP 2 Active</span>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--primary)" }} />
+            <span>AI Mentor Calibrated</span>
+          </div>
+
+          <button
+            onClick={handleResetChat}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid var(--border)",
+              color: "var(--text-muted)",
+              fontSize: "12px",
+              cursor: "pointer",
+            }}
+          >
+            <RotateCcw size={13} />
+            <span>Reset Dialogue</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Workspace (Split Grid) */}
+      <div
+        style={{
+          maxWidth: "1280px",
+          width: "100%",
+          margin: "0 auto",
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "24px",
+        }}
+      >
+        {/* Left Sidebar: Cognitive Context Panel */}
+        <div
+          className="enterprise-card"
+          style={{
+            padding: "28px 24px",
+            background: "rgba(21, 29, 44, 0.7)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "24px",
+            height: "fit-content",
+          }}
+        >
+          {/* Profile Overview */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--primary)", marginBottom: "8px" }}>
+              <Compass size={18} />
+              <span style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700 }}>
+                Active Archetype Profile
+              </span>
+            </div>
+            <h3 style={{ fontSize: "20px", fontWeight: 700, color: "var(--text-primary)", lineHeight: 1.2 }}>
+              {assessment.archetypeTitle}
+            </h3>
+            <p style={{ fontSize: "13px", color: "#38bdf8", fontStyle: "italic", marginTop: "6px" }}>
+              &ldquo;{assessment.tagline}&rdquo;
+            </p>
+          </div>
+
+          <hr style={{ border: "none", borderTop: "1px solid var(--border)" }} />
+
+          {/* Core Strengths */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text-primary)", fontSize: "13px", fontWeight: 600, marginBottom: "12px" }}>
+              <ShieldCheck size={16} style={{ color: "var(--primary)" }} />
+              <span>Key Cognitive Strengths</span>
+            </div>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+              {assessment.coreStrengths.slice(0, 3).map((st, i) => (
+                <li key={i} style={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+                  • {st}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Blind Spots */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text-primary)", fontSize: "13px", fontWeight: 600, marginBottom: "12px" }}>
+              <AlertTriangle size={16} style={{ color: "var(--warning)" }} />
+              <span>Growth Focus</span>
+            </div>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "10px" }}>
+              {assessment.growthAreas.slice(0, 2).map((gr, i) => (
+                <li key={i} style={{ fontSize: "12px", color: "var(--text-secondary)", lineHeight: 1.4 }}>
+                  ! {gr}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Starter Topics */}
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text-muted)", fontSize: "12px", fontWeight: 600, marginBottom: "10px" }}>
+              <Lightbulb size={14} />
+              <span>Recommended Topics</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {starterPrompts.map((prompt, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSendMessage(prompt)}
+                  disabled={isLoading}
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid var(--border)",
+                    color: "var(--text-secondary)",
+                    fontSize: "12px",
+                    textAlign: "left",
+                    cursor: "pointer",
+                    lineHeight: 1.4,
+                    transition: "all 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.07)";
+                    e.currentTarget.style.borderColor = "var(--border-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                    e.currentTarget.style.borderColor = "var(--border)";
+                  }}
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Message Stream */}
+        {/* Right Main Chat Pane */}
         <div
+          className="enterprise-card"
           style={{
-            flex: 1,
-            overflowY: "auto",
-            padding: "24px 20px",
+            background: "rgba(15, 23, 42, 0.8)",
             display: "flex",
             flexDirection: "column",
-            gap: "20px",
+            minHeight: "650px",
+            height: "75vh",
+            overflow: "hidden",
           }}
         >
-          {messages.map((msg, index) => {
-            const isUser = msg.role === "user";
-            return (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  gap: "12px",
-                  alignSelf: isUser ? "flex-end" : "flex-start",
-                  maxWidth: "85%",
-                }}
-              >
-                {!isUser && (
-                  <div
-                    style={{
-                      width: "34px",
-                      height: "34px",
-                      borderRadius: "50%",
-                      background: "var(--primary)",
-                      color: "var(--primary-foreground)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Bot size={18} />
-                  </div>
-                )}
-
+          {/* Chat Messages Stream */}
+          <div
+            style={{
+              flex: 1,
+              padding: "24px",
+              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            {messages.map((msg, idx) => {
+              const isUser = msg.role === "user";
+              return (
                 <div
+                  key={idx}
                   style={{
-                    padding: "16px 20px",
-                    borderRadius: "16px",
-                    background: isUser ? "var(--primary)" : "rgba(255, 255, 255, 0.04)",
-                    border: isUser ? "1px solid var(--border)" : "1px solid rgba(255, 255, 255, 0.06)",
-                    color: isUser ? "var(--text)" : "var(--body)",
-                    fontSize: "14px",
-                    lineHeight: 1.6,
-                    whiteSpace: "pre-wrap",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "12px",
+                    alignSelf: isUser ? "flex-end" : "flex-start",
+                    maxWidth: "85%",
                   }}
                 >
-                  {msg.content}
-                </div>
+                  {!isUser && (
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "8px",
+                        background: "linear-gradient(135deg, #10b981 0%, #6366f1 100%)",
+                        color: "#ffffff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        marginTop: "2px",
+                      }}
+                    >
+                      <Brain size={16} />
+                    </div>
+                  )}
 
-                {isUser && (
                   <div
                     style={{
-                      width: "34px",
-                      height: "34px",
-                      borderRadius: "50%",
-                      background: "rgba(255, 255, 255, 0.1)",
-                      color: "var(--text)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
+                      padding: "16px 20px",
+                      borderRadius: "14px",
+                      background: isUser ? "var(--primary)" : "rgba(21, 29, 44, 0.9)",
+                      border: isUser ? "none" : "1px solid var(--border)",
+                      color: isUser ? "#ffffff" : "var(--text-secondary)",
+                      fontSize: "14px",
+                      lineHeight: 1.6,
+                      whiteSpace: "pre-line",
                     }}
                   >
-                    <User size={18} />
+                    {msg.content}
                   </div>
-                )}
-              </div>
-            );
-          })}
 
-          {isLoading && (
-            <div
+                  {isUser && (
+                    <div
+                      style={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "8px",
+                        background: "#1e293b",
+                        color: "var(--text-secondary)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        marginTop: "2px",
+                      }}
+                    >
+                      <User size={16} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {isLoading && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "var(--text-muted)", fontSize: "13px", paddingLeft: "44px" }}>
+                <div style={{ display: "flex", gap: "4px" }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--primary)", animation: "pulseSubtle 1s infinite" }} />
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--primary)", animation: "pulseSubtle 1s infinite 0.2s" }} />
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--primary)", animation: "pulseSubtle 1s infinite 0.4s" }} />
+                </div>
+                <span>Reflecting on your cognitive profile...</span>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Chat Input Bar */}
+          <div
+            style={{
+              padding: "16px 20px",
+              background: "rgba(11, 17, 28, 0.9)",
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
+              }}
               style={{
                 display: "flex",
                 gap: "12px",
-                alignSelf: "flex-start",
+                alignItems: "center",
               }}
             >
-              <div
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Ask about leadership, blind spots, career alignment, or problem solving..."
+                disabled={isLoading}
                 style={{
-                  width: "34px",
-                  height: "34px",
-                  borderRadius: "50%",
-                  background: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Bot size={18} />
-              </div>
-              <div
-                style={{
+                  flex: 1,
                   padding: "14px 18px",
-                  borderRadius: "16px",
+                  borderRadius: "10px",
                   background: "rgba(255, 255, 255, 0.04)",
-                  color: "var(--primary-foreground)",
-                  fontSize: "13px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
+                  border: "1px solid var(--border)",
+                  color: "var(--text-primary)",
+                  fontSize: "14px",
+                  outline: "none",
+                  transition: "border-color 0.2s ease",
                 }}
-              >
-                <span className="animate-pulse-glow">●</span>
-                <span className="animate-pulse-glow" style={{ animationDelay: "0.2s" }}>●</span>
-                <span className="animate-pulse-glow" style={{ animationDelay: "0.4s" }}>●</span>
-                <span style={{ marginLeft: "6px", color: "var(--mute)" }}>Reflecting...</span>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+                onFocus={(e) => (e.target.style.borderColor = "var(--primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
+              />
 
-        {/* Starter Prompt Pills (Only show if <= 2 messages) */}
-        {messages.length <= 2 && (
-          <div
-            style={{
-              padding: "0 20px 12px 20px",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "8px",
-            }}
-          >
-            {starterPrompts.map((prompt, idx) => (
               <button
-                key={idx}
-                onClick={() => handleSendMessage(prompt)}
+                type="submit"
+                disabled={!inputValue.trim() || isLoading}
                 style={{
-                  padding: "8px 14px",
-                  borderRadius: "9999px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  color: "var(--body)",
-                  fontSize: "12px",
-                  cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "6px",
+                  justifyContent: "center",
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "10px",
+                  background: inputValue.trim() && !isLoading ? "var(--primary)" : "rgba(255, 255, 255, 0.06)",
+                  color: inputValue.trim() && !isLoading ? "#ffffff" : "var(--text-dim)",
+                  border: "none",
+                  cursor: inputValue.trim() && !isLoading ? "pointer" : "not-allowed",
                   transition: "all 0.2s ease",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--primary-foreground)";
-                  e.currentTarget.style.color = "var(--primary-foreground)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
-                  e.currentTarget.style.color = "var(--body)";
-                }}
               >
-                <Compass size={12} />
-                <span>{prompt}</span>
+                <Send size={18} />
               </button>
-            ))}
+            </form>
           </div>
-        )}
-
-        {/* Input Bar */}
-        <div
-          style={{
-            padding: "16px 20px",
-            borderTop: "1px solid var(--border)",
-            background: "rgba(18, 21, 19, 0.9)",
-          }}
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage();
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              background: "rgba(255, 255, 255, 0.03)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              borderRadius: "9999px",
-              padding: "6px 8px 6px 18px",
-            }}
-          >
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask your companion about your traits, career, or relationships..."
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: "var(--text)",
-                fontSize: "14px",
-                fontFamily: "inherit",
-              }}
-            />
-
-            <button
-              type="submit"
-              disabled={!inputValue.trim() || isLoading}
-              style={{
-                width: "38px",
-                height: "38px",
-                borderRadius: "50%",
-                background: inputValue.trim() ? "var(--primary-foreground)" : "rgba(255, 255, 255, 0.05)",
-                color: inputValue.trim() ? "#050606" : "var(--mute)",
-                border: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: inputValue.trim() ? "pointer" : "not-allowed",
-                transition: "all 0.2s ease",
-              }}
-            >
-              <Send size={16} />
-            </button>
-          </form>
         </div>
       </div>
     </div>

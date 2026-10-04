@@ -1,115 +1,168 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Sparkles, Brain, Eye, Cpu } from "lucide-react";
+import { Sparkles, Brain, Eye, Cpu, Activity } from "lucide-react";
 
 export function SynthesisLoader() {
   const [pulseIndex, setPulseIndex] = useState(0);
 
   const statuses = [
-    { text: "Decoding 19 subconscious perceptual choices...", icon: Eye },
-    { text: "Cross-referencing psychological perception matrix...", icon: Cpu },
-    { text: "Synthesizing cognitive archetypes via Google Gemini...", icon: Brain },
-    { text: "Assembling personality radar and companion directive...", icon: Sparkles },
+    { text: "Decoding 19 raw visual cortex perceptual signals...", icon: Eye, detail: "Ventral & Dorsal stream correlation" },
+    { text: "Cross-referencing psychological perception matrix...", icon: Cpu, detail: "Gestalt multi-factor calibration" },
+    { text: "Synthesizing cognitive archetypes via Google Gemini...", icon: Brain, detail: "Deep neural psychometric inference" },
+    { text: "Calibrating 4-pole trait spectrum & mentor persona...", icon: Sparkles, detail: "Formatting executive intelligence dossier" },
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
       setPulseIndex((prev) => (prev + 1) % statuses.length);
-    }, 1800);
+    }, 1600);
     return () => clearInterval(timer);
   }, [statuses.length]);
 
-  const ActiveIcon = statuses[pulseIndex].icon;
+  const currentStatus = statuses[pulseIndex];
+  const ActiveIcon = currentStatus.icon;
 
   return (
     <div
+      className="enterprise-bg"
       style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "24px 16px",
+        padding: "24px 20px",
       }}
     >
       <div
-        className="glass-panel"
+        className="enterprise-card subtle-shadow"
         style={{
-          maxWidth: "540px",
+          maxWidth: "580px",
           width: "100%",
-          padding: "48px 32px",
+          padding: "48px 36px",
           textAlign: "center",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "24px",
+          gap: "28px",
+          background: "rgba(21, 29, 44, 0.85)",
         }}
       >
-        {/* Pulsing Orb Center */}
+        {/* Animated Central Node */}
         <div
           style={{
             position: "relative",
-            width: "90px",
-            height: "90px",
+            width: "84px",
+            height: "84px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           <div
-            className="animate-pulse-glow"
+            className="animate-pulse-subtle"
             style={{
               position: "absolute",
               width: "100%",
               height: "100%",
               borderRadius: "50%",
-              background: "rgba(103, 242, 154, 0.2)",
-              border: "1px solid var(--primary-foreground)",
+              background: "rgba(16, 185, 129, 0.12)",
+              border: "1px solid rgba(16, 185, 129, 0.3)",
             }}
           />
           <div
             style={{
               position: "relative",
-              width: "60px",
-              height: "60px",
-              borderRadius: "50%",
-              background: "var(--primary)",
-              color: "var(--primary-foreground)",
+              width: "56px",
+              height: "56px",
+              borderRadius: "14px",
+              background: "linear-gradient(135deg, #10b981 0%, #6366f1 100%)",
+              color: "#ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              boxShadow: "0 8px 24px rgba(16, 185, 129, 0.25)",
             }}
           >
-            <ActiveIcon size={28} />
+            <ActiveIcon size={26} />
           </div>
         </div>
 
         <div>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "4px 10px",
+              borderRadius: "9999px",
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid var(--border)",
+              fontSize: "12px",
+              color: "var(--text-muted)",
+              marginBottom: "12px",
+            }}
+          >
+            <Activity size={13} style={{ color: "var(--primary)" }} />
+            <span>Neural Synthesis Engine</span>
+          </div>
+
           <h3
             style={{
               fontSize: "22px",
-              fontWeight: 500,
-              color: "var(--text)",
+              fontWeight: 700,
+              color: "var(--text-primary)",
               marginBottom: "8px",
             }}
           >
-            Unlocking Your Mind
+            Synthesizing Your Cognitive Blueprint
           </h3>
+
           <p
             style={{
               fontSize: "14px",
-              color: "var(--primary-foreground)",
+              color: "var(--text-secondary)",
               minHeight: "24px",
-              transition: "opacity 0.3s ease",
+              fontWeight: 500,
+              transition: "opacity 0.2s ease",
             }}
           >
-            {statuses[pulseIndex].text}
+            {currentStatus.text}
           </p>
+
+          <span
+            style={{
+              display: "block",
+              fontSize: "12px",
+              color: "var(--text-dim)",
+              marginTop: "4px",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            [{currentStatus.detail}]
+          </span>
         </div>
 
-        <p style={{ fontSize: "12px", color: "var(--mute)", lineHeight: 1.5 }}>
-          Our neural pipeline is correlating your instant visual impressions with behavioral psychology models.
+        {/* Step Progress Pills */}
+        <div style={{ display: "flex", gap: "8px", width: "100%", justifyContent: "center" }}>
+          {statuses.map((_, i) => (
+            <div
+              key={i}
+              style={{
+                height: "4px",
+                flex: 1,
+                maxWidth: "60px",
+                borderRadius: "9999px",
+                background: i <= pulseIndex ? "var(--primary)" : "rgba(255, 255, 255, 0.08)",
+                transition: "background 0.3s ease",
+              }}
+            />
+          ))}
+        </div>
+
+        <p style={{ fontSize: "12px", color: "var(--text-dim)", lineHeight: 1.5 }}>
+          Subconscious visual perceptions are being mapped into a multi-factor psychological archetype.
         </p>
       </div>
     </div>

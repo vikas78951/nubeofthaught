@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { IllusionStage } from "@/lib/illusionsData";
-import { ArrowRight, AlertCircle, Check } from "lucide-react";
+import { ArrowRight, Check, AlertCircle, Eye, Zap } from "lucide-react";
 
 interface QuizStageRunnerProps {
   stage: IllusionStage;
@@ -26,7 +26,7 @@ export function QuizStageRunner({
     setHasValidationError(false);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = useCallback(() => {
     if (!selectedOptionId) {
       setHasValidationError(true);
       return;
@@ -35,226 +35,363 @@ export function QuizStageRunner({
     setSelectedOptionId(null);
     setHasValidationError(false);
     onNextStage(chosen);
-  };
+  }, [selectedOptionId, onNextStage]);
+
+  // Keyboard shortcut support (1, 2, 3, 4, Enter)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const num = parseInt(e.key, 10);
+      if (!isNaN(num) && num >= 1 && num <= stage.options.length) {
+        setSelectedOptionId(stage.options[num - 1].id);
+        setHasValidationError(false);
+      } else if (e.key === "Enter") {
+        if (selectedOptionId) {
+          handleNextClick();
+        } else {
+          setHasValidationError(true);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [stage.options, selectedOptionId, handleNextClick]);
 
   const progressPercent = Math.round(((currentStageIndex + 1) / totalStages) * 100);
 
   return (
     <div
+      className="enterprise-bg"
       style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px 16px",
+        justifyContent: "space-between",
+        padding: "24px 20px 40px 20px",
       }}
     >
+      {/* Top Header / Progress Strip */}
       <div
-        className={`glass-panel ${hasValidationError ? "animate-shake" : ""}`}
         style={{
-          maxWidth: "760px",
+          maxWidth: "1160px",
           width: "100%",
-          padding: "32px 24px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          position: "relative",
+          margin: "0 auto 24px auto",
         }}
       >
-        {/* Top Progress Bar */}
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "8px",
-              fontSize: "13px",
-              color: "var(--mute)",
-            }}
-          >
-            <span>
-              Stage <strong style={{ color: "var(--text)" }}>{currentStageIndex + 1}</strong> of {totalStages}
-            </span>
-            <span style={{ color: "var(--primary-foreground)", fontWeight: 400 }}>
-              {progressPercent}% Complete
-            </span>
-          </div>
-
-          <div
-            style={{
-              width: "100%",
-              height: "6px",
-              background: "rgba(255, 255, 255, 0.06)",
-              borderRadius: "9999px",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${progressPercent}%`,
-                height: "100%",
-                background: "linear-gradient(90deg, #173326 0%, #67F29A 100%)",
-                borderRadius: "9999px",
-                transition: "width 0.3s ease",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Stage Header */}
-        <div style={{ textAlign: "center" }}>
-          <h2
-            style={{
-              fontSize: "clamp(20px, 3vw, 26px)",
-              fontWeight: 500,
-              color: "var(--text)",
-              marginBottom: "8px",
-            }}
-          >
-            {stage.title}
-          </h2>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "var(--primary-foreground)",
-              fontWeight: 300,
-            }}
-          >
-            {stage.question}
-          </p>
-        </div>
-
-        {/* Illusion Visual Display Frame */}
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            height: "clamp(260px, 45vh, 420px)",
-            borderRadius: "16px",
-            overflow: "hidden",
-            background: "#0a0d0b",
-            border: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            marginBottom: "12px",
+            fontSize: "14px",
           }}
         >
-          <Image
-            src={stage.imageSrc}
-            alt={stage.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 760px"
-            priority
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "3px 10px",
+                borderRadius: "6px",
+                background: "rgba(16, 185, 129, 0.12)",
+                color: "var(--primary)",
+                fontWeight: 600,
+                fontSize: "12px",
+              }}
+            >
+              Stage {currentStageIndex + 1} of {totalStages}
+            </span>
+            <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>
+              {stage.title}
+            </span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--text-muted)", fontSize: "13px" }}>
+            <span>{progressPercent}% Complete</span>
+          </div>
+        </div>
+
+        {/* High Precision Progress Bar */}
+        <div
+          style={{
+            width: "100%",
+            height: "6px",
+            borderRadius: "9999px",
+            background: "rgba(255, 255, 255, 0.08)",
+            overflow: "hidden",
+          }}
+        >
+          <div
             style={{
-              objectFit: "contain",
-              transition: "transform 0.4s ease",
+              width: `${progressPercent}%`,
+              height: "100%",
+              background: "linear-gradient(90deg, #10b981 0%, #6366f1 100%)",
+              transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           />
         </div>
+      </div>
 
-        {/* Selectable Option Cards (Zero interpretation revealed) */}
+      {/* Main Studio View (Split Screen) */}
+      <div
+        style={{
+          maxWidth: "1160px",
+          width: "100%",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+          gap: "32px",
+          alignItems: "center",
+        }}
+      >
+        {/* Left Pane: Optical Illusion Stage Image */}
         <div
+          className="enterprise-card subtle-shadow"
           style={{
-            display: "grid",
-            gridTemplateColumns: stage.options.length > 2 ? "repeat(auto-fit, minmax(200px, 1fr))" : "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: "12px",
+            padding: "16px",
+            background: "rgba(15, 23, 42, 0.8)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
           }}
         >
-          {stage.options.map((option) => {
-            const isSelected = selectedOptionId === option.id;
-            return (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => handleSelect(option.id)}
+          <div
+            style={{
+              width: "100%",
+              height: "440px",
+              position: "relative",
+              borderRadius: "12px",
+              overflow: "hidden",
+              background: "#0a0f18",
+            }}
+          >
+            <Image
+              src={stage.imageSrc}
+              alt={stage.title}
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+              sizes="(max-width: 768px) 100vw, 560px"
+            />
+          </div>
+
+          <div
+            style={{
+              marginTop: "12px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "12px",
+              color: "var(--text-dim)",
+            }}
+          >
+            <Eye size={13} />
+            <span>Dual-Perspective Perceptual Stimulus</span>
+          </div>
+        </div>
+
+        {/* Right Pane: Context Prompt & Selections */}
+        <div
+          className={`enterprise-card ${hasValidationError ? "animate-shake" : ""}`}
+          style={{
+            padding: "36px 32px",
+            background: "rgba(21, 29, 44, 0.7)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "4px 10px",
+                borderRadius: "6px",
+                background: "rgba(255, 255, 255, 0.04)",
+                border: "1px solid var(--border)",
+                fontSize: "12px",
+                color: "var(--text-muted)",
+                marginBottom: "16px",
+              }}
+            >
+              <Zap size={13} style={{ color: "var(--warning)" }} />
+              <span>Gut Reaction Benchmark</span>
+            </div>
+
+            <h2
+              style={{
+                fontSize: "24px",
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                marginBottom: "10px",
+                lineHeight: 1.3,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {stage.question}
+            </h2>
+
+            <p
+              style={{
+                fontSize: "14px",
+                color: "var(--text-secondary)",
+                lineHeight: 1.5,
+                marginBottom: "24px",
+              }}
+            >
+              Select the option that your visual cortex registered first. Do not rationalize or search for alternate figures.
+            </p>
+
+            {/* Selectable Options */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "28px" }}>
+              {stage.options.map((option, idx) => {
+                const isSelected = selectedOptionId === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => handleSelect(option.id)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "16px 20px",
+                      borderRadius: "10px",
+                      background: isSelected ? "rgba(16, 185, 129, 0.12)" : "rgba(255, 255, 255, 0.03)",
+                      border: isSelected ? "1px solid var(--primary)" : "1px solid var(--border)",
+                      color: isSelected ? "#ffffff" : "var(--text-secondary)",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      fontSize: "15px",
+                      fontWeight: isSelected ? 600 : 400,
+                      transition: "all 0.15s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
+                        e.currentTarget.style.borderColor = "var(--border-hover)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                        e.currentTarget.style.borderColor = "var(--border)";
+                      }
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "6px",
+                          background: isSelected ? "var(--primary)" : "rgba(255, 255, 255, 0.08)",
+                          color: isSelected ? "#ffffff" : "var(--text-muted)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "12px",
+                          fontWeight: 700,
+                          fontFamily: "var(--font-mono)",
+                        }}
+                      >
+                        {idx + 1}
+                      </span>
+                      <span>{option.text}</span>
+                    </div>
+
+                    {isSelected && (
+                      <div
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "50%",
+                          background: "var(--primary)",
+                          color: "#ffffff",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Check size={13} strokeWidth={3} />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Validation Notice & Action Bar */}
+          <div>
+            {hasValidationError && (
+              <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "16px 20px",
-                  borderRadius: "12px",
-                  background: isSelected ? "var(--primary)" : "rgba(255, 255, 255, 0.03)",
-                  border: isSelected ? "1.5px solid var(--primary-foreground)" : "1px solid rgba(255, 255, 255, 0.08)",
-                  color: isSelected ? "var(--primary-foreground)" : "var(--text)",
-                  fontSize: "15px",
-                  fontWeight: isSelected ? 400 : 300,
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "all 0.2s ease",
-                  transform: isSelected ? "scale(1.01)" : "scale(1)",
-                  boxShadow: isSelected ? "0 0 16px rgba(103, 242, 154, 0.2)" : "none",
+                  gap: "8px",
+                  color: "var(--error)",
+                  fontSize: "13px",
+                  marginBottom: "12px",
                 }}
               >
-                <span>{option.text}</span>
-                <div
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    border: isSelected ? "none" : "1.5px solid var(--mute)",
-                    background: isSelected ? "var(--primary-foreground)" : "transparent",
-                    color: "#050606",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    marginLeft: "12px",
-                  }}
-                >
-                  {isSelected && <Check size={14} strokeWidth={3} />}
-                </div>
+                <AlertCircle size={15} />
+                <span>Please select an option before continuing.</span>
+              </div>
+            )}
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+              <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>
+                Tip: Use keys <kbd style={{ padding: "2px 6px", background: "#1e293b", borderRadius: "4px", color: "#cbd5e1" }}>1</kbd> <kbd style={{ padding: "2px 6px", background: "#1e293b", borderRadius: "4px", color: "#cbd5e1" }}>2</kbd> <kbd style={{ padding: "2px 6px", background: "#1e293b", borderRadius: "4px", color: "#cbd5e1" }}>3</kbd> and <kbd style={{ padding: "2px 6px", background: "#1e293b", borderRadius: "4px", color: "#cbd5e1" }}>Enter</kbd>
+              </span>
+
+              <button
+                onClick={handleNextClick}
+                disabled={!selectedOptionId}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "14px 28px",
+                  borderRadius: "8px",
+                  background: selectedOptionId ? "var(--primary)" : "rgba(255, 255, 255, 0.06)",
+                  color: selectedOptionId ? "#ffffff" : "var(--text-dim)",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  cursor: selectedOptionId ? "pointer" : "not-allowed",
+                  border: "none",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedOptionId) {
+                    e.currentTarget.style.background = "var(--primary-hover)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedOptionId) {
+                    e.currentTarget.style.background = "var(--primary)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }
+                }}
+              >
+                <span>{currentStageIndex === totalStages - 1 ? "Synthesize Results" : "Next Stage"}</span>
+                <ArrowRight size={16} />
               </button>
-            );
-          })}
-        </div>
-
-        {/* Validation Notice */}
-        {hasValidationError && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              padding: "10px",
-              borderRadius: "8px",
-              background: "rgba(201, 135, 147, 0.1)",
-              border: "1px solid var(--error)",
-              color: "var(--error)",
-              fontSize: "13px",
-            }}
-          >
-            <AlertCircle size={16} />
-            <span>Please select your instantaneous gut reaction to proceed.</span>
+            </div>
           </div>
-        )}
-
-        {/* Next Stage Action Button */}
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button
-            type="button"
-            onClick={handleNextClick}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "14px 28px",
-              borderRadius: "9999px",
-              background: selectedOptionId ? "var(--primary-foreground)" : "rgba(255, 255, 255, 0.08)",
-              color: selectedOptionId ? "#050606" : "var(--mute)",
-              fontSize: "15px",
-              fontWeight: 500,
-              cursor: selectedOptionId ? "pointer" : "not-allowed",
-              border: "none",
-              transition: "all 0.2s ease-in-out",
-            }}
-          >
-            <span>{currentStageIndex === totalStages - 1 ? "Complete & Synthesize" : "Next Stage"}</span>
-            <ArrowRight size={18} />
-          </button>
         </div>
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: "24px" }}>
+        <span style={{ fontSize: "12px", color: "var(--text-dim)" }}>
+          Strict Blind Testing Protocol • Perception choices are sealed until synthesis
+        </span>
       </div>
     </div>
   );
