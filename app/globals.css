@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #050606;
+  --surface: #121513;
+  --surface-card: #0f1311;
+  --surface-glass: rgba(18, 21, 19, 0.78);
+  --primary: #173326;
+  --primary-hover: #1f4735;
+  --primary-foreground: #67F29A;
+  --text: #F5F7F5;
+  --body: #D7DCD9;
+  --mute: #7C8580;
+  --border: rgba(103, 242, 154, 0.14);
+  --border-active: #67F29A;
+  --error: #C98793;
+  --font-lexend: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-lexend);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+/* Radiant Glow Effects */
+.mint-glow {
+  box-shadow: 0 0 24px rgba(103, 242, 154, 0.16);
+}
+
+.mint-glow-active {
+  box-shadow: 0 0 32px rgba(103, 242, 154, 0.3);
+}
+
+/* Micro-animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake 0.35s ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-foreground);
+}
