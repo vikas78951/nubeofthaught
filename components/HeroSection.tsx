@@ -563,7 +563,7 @@ export function HeroSection({ onStartQuiz }: HeroSectionProps) {
               textTransform: "uppercase",
               letterSpacing: "0.1em",
               color: "var(--indigo-accent)",
-              fontWeight: 600,
+              fontWeight: 700,
               display: "block",
               marginBottom: "8px",
             }}
@@ -596,62 +596,82 @@ export function HeroSection({ onStartQuiz }: HeroSectionProps) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
             gap: "20px",
           }}
         >
           {/* Dimension 1 */}
-          <div className="enterprise-card" style={{ padding: "24px 20px" }}>
+          <div className="enterprise-card" style={{ padding: "28px 24px", background: "rgba(21, 29, 44, 0.8)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 01</span>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 01</span>
               <LineChart size={18} style={{ color: "var(--primary)" }} />
             </div>
-            <h3 style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
-              Analytical vs. Intuitive
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Pattern Synthesis
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+            <div style={{ display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 600, color: "#38bdf8", marginBottom: "12px" }}>
+              <span>Analytical</span>
+              <span style={{ color: "var(--text-dim)" }}>⟷</span>
+              <span style={{ color: "#10b981" }}>Intuitive</span>
+            </div>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               Measures whether your perception first parses discrete constituent components (micro-analysis) or synthesizes global Gestalt patterns (macroscopic intuition).
             </p>
           </div>
 
           {/* Dimension 2 */}
-          <div className="enterprise-card" style={{ padding: "24px 20px" }}>
+          <div className="enterprise-card" style={{ padding: "28px 24px", background: "rgba(21, 29, 44, 0.8)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 02</span>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 02</span>
               <Target size={18} style={{ color: "#38bdf8" }} />
             </div>
-            <h3 style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
-              Structured Order vs. Fluid Agility
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Framework Rigor
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+            <div style={{ display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 600, color: "#6366f1", marginBottom: "12px" }}>
+              <span>Structured Order</span>
+              <span style={{ color: "var(--text-dim)" }}>⟷</span>
+              <span style={{ color: "#a855f7" }}>Fluid Agility</span>
+            </div>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               Examines tolerance for ambiguity, preference for methodical frameworks versus spontaneous adaptability and improvisation in shifting contexts.
             </p>
           </div>
 
           {/* Dimension 3 */}
-          <div className="enterprise-card" style={{ padding: "24px 20px" }}>
+          <div className="enterprise-card" style={{ padding: "28px 24px", background: "rgba(21, 29, 44, 0.8)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 03</span>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 03</span>
               <Users size={18} style={{ color: "#a855f7" }} />
             </div>
-            <h3 style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
-              Assertive Leadership vs. Empathy
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Leadership Stance
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+            <div style={{ display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 600, color: "#f59e0b", marginBottom: "12px" }}>
+              <span>Assertive Direction</span>
+              <span style={{ color: "var(--text-dim)" }}>⟷</span>
+              <span style={{ color: "#10b981" }}>Empathetic Guidance</span>
+            </div>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               Reveals whether subconscious attention prioritizes decisive outcome ownership and clarity or emotional resonance and collective harmony.
             </p>
           </div>
 
           {/* Dimension 4 */}
-          <div className="enterprise-card" style={{ padding: "24px 20px" }}>
+          <div className="enterprise-card" style={{ padding: "28px 24px", background: "rgba(21, 29, 44, 0.8)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 04</span>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimension 04</span>
               <Lock size={18} style={{ color: "#f59e0b" }} />
             </div>
-            <h3 style={{ fontSize: "17px", fontWeight: 600, color: "var(--text-primary)", marginBottom: "8px" }}>
-              Critical Discernment vs. Openness
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Cognitive Aperture
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+            <div style={{ display: "inline-flex", gap: "6px", fontSize: "12px", fontWeight: 600, color: "#f43f5e", marginBottom: "12px" }}>
+              <span>Critical Discernment</span>
+              <span style={{ color: "var(--text-dim)" }}>⟷</span>
+              <span style={{ color: "#38bdf8" }}>Expansive Openness</span>
+            </div>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               Assesses vigilance and risk scrutiny versus broad curiosity and rapid receptivity to novel inputs and perspectives.
             </p>
           </div>

@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "nubeOfThaughts — Subconscious Optical Personality Profiler & AI Companion",
+  title: "nubeOfThaughts — Subconscious Optical Personality Profiler & Cognitive Dossier",
   description:
     "Discover your psychological archetype through 19 unfiltered optical illusions. Powered by Google Gemini cognitive intelligence.",
-  keywords: ["personality test", "optical illusions", "psychometric profiling", "gemini ai", "nube of thoughts"],
+  keywords: ["personality test", "optical illusions", "psychometric profiling", "gemini ai", "nube of thoughts", "cognitive intelligence"],
   openGraph: {
     title: "nubeOfThaughts — What Does Your Visual Perception Reveal?",
-    description: "Take the 19-stage optical illusion test and meet your AI companion.",
+    description: "Take the 19-stage optical illusion test and decode your cognitive archetype.",
     type: "website",
   },
 };
